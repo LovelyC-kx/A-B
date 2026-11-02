@@ -1,0 +1,24 @@
+% Table II — FedBN ablation: Δ(PSNR) = FedBN − FedAvg, per scheme
+%
+% Required preamble: \usepackage{booktabs}
+% Source: cloud_removal_v2/docs/tables/table_fedbn_ablation.md (q.v.)
+
+\begin{table}[t]
+\centering
+\caption{FedBN-vs-FedAvg PSNR difference $\Delta = \mathrm{PSNR}_{\rm FedBN}
+- \mathrm{PSNR}_{\rm FedAvg}$ per aggregation scheme. Positive values mean
+FedBN improved over FedAvg. Mean $\Delta$ across the three schemes is
+within the single-seed noise floor for both BN variants — FedBN is
+essentially neutral on this source-level Dirichlet pixel-regression task.}
+\label{tab:fedbn_ablation}
+\renewcommand{\arraystretch}{1.10}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{l r r r r}
+\toprule
+BN variant & $\Delta$(AllReduce) & $\Delta$(Gossip) & $\Delta$(RelaySum) & Mean $\Delta$ \\
+\midrule
+A: TDBN, SNN & $-0.222$ & $+0.186$ & $+0.061$ & $\mathbf{+0.008}$ \\
+B: BN2d, SNN & $+0.132$ & $+0.010$ & $-0.010$ & $\mathbf{+0.044}$ \\
+\bottomrule
+\end{tabular}
+\end{table}

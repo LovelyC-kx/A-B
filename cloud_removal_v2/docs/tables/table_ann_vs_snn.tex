@@ -1,0 +1,32 @@
+% Table IV — ANN vs SNN backbone (matched FedBN + AllReduce)
+%
+% Required preamble: \usepackage{booktabs}
+% Source: cloud_removal_v2/docs/tables/table_ann_vs_snn.md (q.v.)
+
+\begin{table}[t]
+\centering
+\caption{ANN vs SNN backbone at the matched
+$\mathrm{FedBN}\!+\!\mathrm{AllReduce}$ cell. All 16 non-backbone
+hyperparameters are bit-identical between runs A and C. The 1.61$\times$
+wall-time speedup is a \emph{lower bound} on the ANN's GPU advantage:
+our ANN backbone keeps the $T\!=\!4$ outer time loop and runs the U-Net
+four times per forward pass; a $T\!=\!1$ re-implementation would
+recover an additional $\sim$2.5$\times$ (see \S VI-E).}
+\label{tab:ann_vs_snn}
+\renewcommand{\arraystretch}{1.10}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{l r r r}
+\toprule
+Metric & A: SNN & C: ANN & $\Delta = \mathrm{C}\!-\!\mathrm{A}$ \\
+\midrule
+PSNR (dB)                  & $21.420$  & $\mathbf{22.171}$ & $\mathbf{+0.751}$ \\
+SSIM                       & $0.6589$  & $\mathbf{0.6855}$ & $\mathbf{+0.0266}$ \\
+Wall (h)                   & $6.23$    & $\mathbf{3.86}$   & $\mathbf{-2.37}$  \\
+Comm (MB, total / 80 rounds)        & $3694$    & $3694$            & $0$ \\
+$\mathrm{Var}(\gamma)_{\text{mean}}$
+                           & $7.04\mathrm{e}{-}05$
+                           & $8.72\mathrm{e}{-}05$
+                           & $+1.68\mathrm{e}{-}05$ \\
+\bottomrule
+\end{tabular}
+\end{table}

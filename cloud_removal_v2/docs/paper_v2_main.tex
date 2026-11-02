@@ -1,0 +1,235 @@
+% =====================================================================
+% v2 paper main TeX file — IEEE conference style skeleton
+% =====================================================================
+%
+% This file is the assembly point. The 7 paper section files are written
+% as Markdown under cloud_removal_v2/docs/paper_v2_section_*.md and must
+% be converted to LaTeX before \input. Two recipes are documented in
+% Build instructions below; pick whichever your environment supports.
+%
+% Build instructions
+% ------------------
+%
+% Recipe A — pandoc (recommended, single command):
+%
+%   for s in 1_intro 2_related_work 3_system_model 4_theory \
+%            5_system_opt 6_A_setup 6_B_noniid 6_C_fedbn \
+%            6_D_aggregation 6_E_ann_vs_snn 6_F_qualitative \
+%            6_G_per_plane 6_H_discussion 7_conclusion; do
+%     pandoc paper_v2_section_$s.md \
+%            --from markdown --to latex \
+%            --output paper_v2_section_$s.tex
+%   done
+%
+% Recipe B — manual conversion (no pandoc):
+%   For each section, copy the Markdown content into a .tex file and
+%   apply: ## -> \subsection, ** ** -> \textbf{}, * * -> \emph{},
+%   pipe-tables -> tabular, math $..$ stays the same.
+%
+% Then build:
+%   pdflatex paper_v2_main.tex
+%   bibtex   paper_v2_main
+%   pdflatex paper_v2_main.tex
+%   pdflatex paper_v2_main.tex
+%
+% =====================================================================
+
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+% --- Core packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{listings}
+
+% --- Hyperref colour conventions ---
+\hypersetup{
+  colorlinks   = true,
+  linkcolor    = black,
+  citecolor    = blue,
+  urlcolor     = blue,
+}
+
+% --- Theorem environments (used in section IV) ---
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{assumption}{Assumption}
+\newtheorem{claim}{Claim}
+\newtheorem{remark}{Remark}
+
+% --- Useful macros ---
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Dir}{\mathrm{Dir}}
+\newcommand{\Beta}{\mathrm{Beta}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\Iset}{\mathcal{I}}
+\newcommand{\eff}[1]{\mathrm{eff}(#1)}
+
+% --- Path for figures (PDFs go under figures/) ---
+\graphicspath{{figures/}}
+
+% =====================================================================
+\begin{document}
+
+% --- Title block ---
+\title{Brain-Inspired Decentralised Satellite Federated Learning for
+       Cloud Removal under Source-Level Dirichlet Non-IID:
+       FedBN-Redundancy and the Boundary Case of FLSNN's Theorem~2}
+
+% Author block — replace with actual authors and affiliations.
+\author{
+  \IEEEauthorblockN{(authors anonymised for review)}\\
+  \IEEEauthorblockA{(institutions anonymised for review)}
+}
+
+\maketitle
+
+% =====================================================================
+% Abstract — content from cloud_removal_v2/docs/paper_v2_abstract.md
+% =====================================================================
+\begin{abstract}
+We extend the FLSNN brain-inspired decentralised satellite
+federated-learning framework from on-board image classification
+to the more demanding setting of pixel-level cloud removal under
+source-level Dirichlet non-IID. Inheriting the 50/5/1
+Walker-Star constellation, intra-plane ring-AllReduce, and the
+inter-plane RelaySum / Gossip / AllReduce comparison verbatim,
+we contribute two theoretical and three empirical results.
+Theoretically, we derive a closed-form upper bound on the
+inter-plane gradient dissimilarity $\zeta^2$ for an $S$-source
+Dirichlet partition (Proposition~\ref{prop:dirichlet}) and show
+that, in the resulting small-$\zeta^2$ regime, the three
+aggregation schemes' Theorem-\ref{thm:flsnn} bounds collapse to
+the same asymptotic order (Corollary~\ref{cor:collapse}).
+Empirically, on the CUHK-CR benchmark with $\alpha = 0.1$,
+AllReduce Pareto-dominates Gossip and RelaySum at $60\,\%$ less
+inter-plane communication, an ANN backbone beats SNN by $+0.75$
+\,dB PSNR / $1.61\times$ wall time on a single GPU, and
+FedBN-style BN-local aggregation yields gains within the
+single-seed noise floor regardless of BN variant --- TDBN
+reduces cross-plane $\Var(\gamma)$ by $42\,\%$ vs standard BN,
+but neither variant produces drift large enough for FedBN to
+repair. The five findings are mutually consistent with FLSNN's
+Theorem~\ref{thm:flsnn} in the small-$\zeta^2$ boundary regime.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Spiking neural networks, satellite federated learning, cloud
+removal, Dirichlet non-IID, batch normalisation, decentralised
+optimisation.
+\end{IEEEkeywords}
+
+% =====================================================================
+% Section content — \input the converted .tex files. If pandoc is not
+% used, replace each \input with the inline section content.
+% =====================================================================
+
+\section{Introduction}\label{sec:intro}
+\input{paper_v2_section_1_intro.tex}
+
+\section{Related Work}\label{sec:related}
+\input{paper_v2_section_2_related_work.tex}
+
+\section{System Model and Algorithm}\label{sec:sysmodel}
+\input{paper_v2_section_3_system_model.tex}
+
+\section{Theoretical Analysis}\label{sec:theory}
+\input{paper_v2_section_4_theory.tex}
+
+\section{Inter-Plane Topology Optimisation}\label{sec:sysopt}
+\input{paper_v2_section_5_system_opt.tex}
+
+\section{Experiments}\label{sec:experiments}
+\input{paper_v2_section_6_A_setup.tex}
+\input{paper_v2_section_6_B_noniid.tex}
+\input{paper_v2_section_6_C_fedbn.tex}
+\input{paper_v2_section_6_D_aggregation.tex}
+\input{paper_v2_section_6_E_ann_vs_snn.tex}
+\input{paper_v2_section_6_F_qualitative.tex}
+\input{paper_v2_section_6_G_per_plane.tex}
+\input{paper_v2_section_6_H_discussion.tex}
+
+\section{Conclusion}\label{sec:conclusion}
+\input{paper_v2_section_7_conclusion.tex}
+
+% =====================================================================
+% Bibliography
+% =====================================================================
+\bibliographystyle{IEEEtran}
+\bibliography{paper_v2_refs}
+
+% =====================================================================
+% Appendix (optional) — full proof of Proposition 1
+% =====================================================================
+\appendix
+\section*{Appendix A: Notation}
+See Table~III.F (notation summary, in \texttt{paper\_v2\_section\_3\_system\_model.md}).
+
+\section*{Appendix B: Proof of Proposition~\ref{prop:dirichlet}}
+The full derivation chain (Setup, Gradient decomposition,
+Beta($\alpha,\alpha$) moments, expected average squared
+dissimilarity, sup-norm form) is in
+\texttt{cloud\_removal\_v2/docs/v2\_formal\_derivations.md}
+\S\,D1.1--D1.6. We provide the headline computation here for
+the camera-ready draft.
+
+\medskip
+\noindent\textbf{Setup recap.} Each client's per-sample distribution
+is $p_i \D_1 + (1-p_i) \D_2$ with $p_i \sim \Beta(\alpha,\alpha)$ i.i.d.
+across $i = 1, \ldots, N$.
+
+\medskip
+\noindent\textbf{Gradient decomposition.} By linearity of
+$\nabla_\theta$ in $p_i$:
+$\nabla f_i - \nabla f = (p_i - \bar p_N)(\nabla f_1 - \nabla f_2)$.
+Squaring:
+$\| \nabla f_i - \nabla f \|^2
+= (p_i - \bar p_N)^2 \|\nabla f_1 - \nabla f_2\|^2$.
+
+\medskip
+\noindent\textbf{Beta moments.} $\E[p_i] = 1/2$;
+$\Var_{\Beta(\alpha,\alpha)}(p_i) = 1/(4(2\alpha+1))$.
+
+\medskip
+\noindent\textbf{Expected average.} Using
+$\E[\sum_i (p_i - \bar p_N)^2] = (N-1)\Var(p_i)$:
+$$
+\E_{\mathbf{p}}\!\Bigl[\tfrac{1}{N}\sum_i (p_i - \bar p_N)^2\Bigr]
+= \frac{N-1}{4N(2\alpha+1)}.
+$$
+Combining with the gradient decomposition gives
+Proposition~\ref{prop:dirichlet}. $\hfill\square$
+
+\section*{Appendix C: Build instructions}
+
+This file's compilation requires \texttt{IEEEtran.cls} (IEEE
+conference style) and a \LaTeX{} distribution with the standard
+\texttt{amsmath, booktabs, multirow, hyperref, graphicx} packages.
+
+The 14 referenced figures are produced from the saved checkpoints
+and \texttt{summary.json} files via the seven plotting scripts
+listed in \texttt{cloud\_removal\_v2/docs/tables/README.md}
+\S\,7. Place them under \texttt{figures/} and update each
+section's \texttt{\textbackslash includegraphics\{...\}} path.
+
+The full reproducibility chain (every numeric cell of the paper's
+4 tables) is in \texttt{paper\_v2\_MASTER\_INDEX.md} \S\,7
+(``End-to-end reproduction recipe'').
+
+\end{document}
